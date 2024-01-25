@@ -137,8 +137,6 @@ class KMVGAE(nn.Module):
 
         # VGAE training parameters
         self.activation = F.relu
-
-        # 第二个参数往下走时性能似乎有所提高
         self.base_gcn = nn.ModuleList([GraphConv(self.feat_dim, hid1_dim, activation = self.activation) for i in range(len(self.view_adj))])
         self.gcn_mean = nn.ModuleList([GraphConv(hid1_dim, self.hid2_dim) for i in range(len(self.view_adj))])
         parameter = [[0.3, 0.7], [0.3, 0.7], [0.3, 0.7], [0.3, 0.7]]
@@ -259,9 +257,6 @@ class KMVGAE(nn.Module):
                 'Loss training = {:.4f}, acc = {:.4f}, nmi = {:.4f}, f1 = {:.4f}, ari = {:.4f}'.format(loss, acc, nmi, f1, ari))
             acc_list.append(acc)
             nmi_list.append(nmi)
-            # 采用NMI
-
-
             # lr_s.step()
             loss.backward()
             optimizer.step()
@@ -322,8 +317,6 @@ def variational_parameter(adj, dgl_adj):
 if __name__ == "__main__":
 
     num_nodes, feat_dim, k, labels, adj_list, feat = load_data(DATASET)
-    # sp_feat = sp.coo_matrix(attr) # 属性矩阵转为稀疏
-    # 共识图
     common_graph = torch.zeros(size=(num_nodes, num_nodes))
 
     norm_list = []
